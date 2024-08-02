@@ -5,6 +5,8 @@ import express from 'express';
 import fs from 'fs';
 // const fs = require('fs');
 import multer from "multer";
+import path from 'path';
+import { fileURLToPath } from 'url';
 import cors from "cors";
 const app = express();
 const port = 3001;
@@ -15,6 +17,10 @@ app.use(express.json());
 app.use(cors());
 import {readPdfPages} from 'pdf-text-reader';
 import OpenAI from 'openai';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+app.use(express.static(path.join(__dirname, 'build')));
 
 const storage = multer.memoryStorage();
 const upload = multer({ dest: 'uploads/' });
@@ -67,6 +73,10 @@ app.post('/evaluate', async (req, res) => {
         res.status(500).send('Error in final output.');
     }
 })
+
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+  });
 
 
 app.listen(port, () => {
