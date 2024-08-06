@@ -1,9 +1,7 @@
 import dotenv from 'dotenv';
 dotenv.config();
-// import axios from 'axios';
 import express from 'express';
 import fs from 'fs';
-// const fs = require('fs');
 import multer from "multer";
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -61,12 +59,9 @@ app.post('/evaluate', async (req, res) => {
     const pageContent = pages[index]?.lines
 
     try {
-        console.log("checkpoint 2")
         const result = await main(pageContent);
-        console.log("checkpoint 3")
         const openAIResponse = result.choices[0].message.content;
         const jsonResult = JSON.parse(openAIResponse.replace('```json\n', '').replace('\n```', ''));
-        console.log("checkpoint 4")
         res.send(jsonResult);
     } catch (error) {
         console.error('Error in OpenAI part:', error);
